@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+	</head>
+	<style>
+		.head-part {
+			padding-top: 10px;
+		}
+		.head-part #auther {
+			height: 30px;
+			line-height: 30px;
+			margin-left: 70px;
+		}
+		.head-part #currentDate {
+			height: 30px;
+			width: 300px;
+			line-height: 30px;
+			margin-left: 70px;
+			font-size: 14px;
+		}
+		.head-part .about-type {
+			float: right;
+			margin-right: 10px;
+			text-align: right;
+			text-overflow:ellipsis;
+			overflow:hidden;
+			white-space:nowrap; 
+			width: 100px;
+			color: red;
+		}
+		#headImage {
+			width: 60px;
+			height: 60px;
+			border-radius: 30px;
+			display: block;
+			position: absolute;
+			float: left;
+		}
+		#titleConcent {
+			height: 110px;
+		}
+		#mainImage {
+			padding-right: 10px;
+			width: 100px;
+			height: 100px;
+			float: right;
+		}
+		#titleConcent1 {
+			margin-top: 10px;
+			height: 100px;
+			text-overflow:ellipsis;
+			overflow:hidden;
+			line-height: 25px;
+		}
+		.mui-scroll .mui-table-view {
+			padding-left: 10px;
+		}
+		.tableView-cell {
+			list-style-type: none;
+			/*设置下边框样式*/
+			border-bottom-style: solid;
+			border-bottom-width: 1px;
+			border-bottom-color: #D3D3D3;
+		}
+		.mui-content{
+			padding-top: 44px;
+		}
+		.mui-table-view:before{
+			0px;
+		}
+		.mui-table-view:after{
+			0px;
+		}
+	</style> 
+	<body style="background-color: #D3D3D3;">
+		<header class="mui-bar mui-bar-nav white">
+			<h1 class="mui-title">微淘</h1>
+		</header>
+		<div class="mui-content">
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--数据列表-->
+				<ul class="mui-table-view" style="background-color: white;">
+					<li class="tableView-cell">
+						
+					</li>
+				</ul>
+			</div>
+		</div>
+		</div>		
+	</body>
+	<script src="../js/mui.js" ></script>
+	<script type="text/javascript" charset="utf-8">
+	
+	(function($) {
+		//阻尼系数
+		var deceleration = mui.os.ios ? 0.003 : 0.0009;
+		$('.mui-scroll-wrapper').scroll({
+			bounce: false,
+			indicators: true, //是否显示滚动条
+			deceleration: deceleration
+		});
+	})(mui);
+
+	var table = document.body.querySelector('.mui-table-view');
+	mui.plusReady(function(){
+	mui.ajax('http://c.m.163.com/nc/article/list/T1348648650048/0-20.html',{
+	dataType:'json',//服务器返回json格式数据
+	type:'get',//HTTP请求类型
+	success:function(data){
+		var data = data["T1348648650048"];
+//		console.log(data);
+		mui.each(data, function(index, item) {	
+		var li = document.createElement('li');
+		
+		
+		li.url = item.url_3w; /*详情url*/
+		li.title = item.title; /*详情标题*/
+		li.className = 'tableView-cell'; 			
+		
+		
+		li.innerHTML = '<div class="head-part">'
+		+ '<img src="' + item.imgsrc + '"/ id="headImage">'
+		+ '<div class="about-auther">'
+		+ '<div id="auther">'
+		+ item.source 
+		+ '</div><div id="currentDate">'
+		+ item.lmodify + '</div></div></div><div id="titleConcent">'
+		+ '<img src=" '+ item.imgsrc + '" id="mainImage"/><div id="titleConcent1">'
+		+ item.ltitle + '</div></div>';	
+//		console.log(li.innerHTML);
+			table.appendChild(li, table.firstChild);			
+		});
+	}
+});
+	});
+
+	//链接批量处理 页面跳转  
+		var aniShow = "pop-in";
+		mui('.mui-content').on('tap', 'li', function() {  
+			mui.openWindow({
+				url: "detail.html",
+				id: 'detail',
+				show: {
+					aniShow: 'slide-in-right' /*页面切换效果*/
+				},
+				extras: {
+					detailUrl: this.url,
+					detailTitle: this.title
+				},
+			});
+		});		
+		
+	</script>
+</html>
